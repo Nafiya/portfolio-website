@@ -22,7 +22,7 @@ export class PortfolioDataService {
     { name: 'GitHub', url: 'https://github.com/Nafiya', icon: 'github' },
     { name: 'LinkedIn', url: 'https://linkedin.com/in/nafiya-sayed-891503106/', icon: 'linkedin' },
     { name: 'Leetcode', url: 'https://leetcode.com/u/Nafiya/', icon: 'leetcode' },
-    { name: 'Email', url: 'mailto:sdnafiya6@gmail.com', icon: 'email' }
+    { name: 'Email', url: 'https://mail.google.com/mail/?view=cm&fs=1&to=sdnafiya6@gmail.com', icon: 'email' }
   ];
 
   // Projects
@@ -33,7 +33,7 @@ export class PortfolioDataService {
       description: 'A geolocation-based service for finding nearby places using Redis GEO commands and geohashing. Built with Spring Boot backend and Angular frontend, featuring real-time location tracking and efficient spatial queries.',
       technologies: ['Spring Boot', 'Angular 17', 'Redis', 'PostgreSQL', 'TypeScript', 'Docker'],
       image: 'assets/projects/nearby-service.png',
-      github: 'https://github.com/yourusername/nearby-service',
+      github: 'https://github.com/Nafiya/Nearby_Search_Service',
       demo: 'https://nearby-service-demo.netlify.app',
       featured: true,
       category: 'Full Stack'
@@ -86,8 +86,8 @@ export class PortfolioDataService {
       description: 'This responsive portfolio website showcasing projects, skills, and experience. Built with Angular 17 and deployed on Netlify.',
       technologies: ['Angular 17', 'TypeScript', 'CSS3', 'Netlify'],
       image: 'assets/projects/portfolio.png',
-      github: 'https://github.com/yourusername/portfolio',
-      demo: 'https://yourname.com',
+      github: 'https://github.com/Nafiya/portfolio-website',
+      demo: 'https://nafiya-sayed.com',
       featured: false,
       category: 'Frontend'
     }
@@ -123,44 +123,48 @@ export class PortfolioDataService {
   experience: Experience[] = [
     {
       id: 1,
-      company: 'Tech Company Inc.',
-      position: 'Senior Full Stack Developer',
-      period: 'Jan 2023 - Present',
-      location: 'San Francisco, CA',
-      description: 'Leading development of microservices-based applications using Spring Boot and Angular. Architected and implemented geospatial features using Redis GEO. Mentoring junior developers and conducting code reviews.',
+      company: 'American Airlines - Pilot Technology',
+      position: 'Technical Lead',
+      period: 'Nov 2022 - Present',
+      location: 'Halifax, Nova Scotia',
+      description: 'Technical Lead for American Airlines’ Pilot Technology platform, building and supporting mission-critical applications used by ~15,000 pilots. Led design reviews, cloud-migration initiatives, and implemented a resilient batch-recovery solution that significantly reduced operational errors. Hands-on contributor with deep experience in Java, Spring Boot, Kafka, Angular, and Azure',
       current: true,
       achievements: [
-        'Reduced API response time by 60% through optimization',
-        'Led migration to microservices architecture serving 1M+ users',
-        'Implemented CI/CD pipeline reducing deployment time by 80%'
+        'Led an 11-member engineering team to deliver pilot-critical features end-to-end, ensuring on-time delivery for all major releases',
+        'Drove design reviews for new features and multiple cloud-migration initiatives, improving system reliability and scalability',
+        'Proposed and implemented an enhanced batch-recovery mechanism, preventing ~100% potential pay claim errors monthly and improving operational accuracy by 30%',
+        'Reduced 24/7 production support costs by ~70% by automating routine updates and establishing a streamlined incident-management workflow',
+        'Participated in the hiring process, mentoring, and onboarding 4+ full-stack developers'
       ]
     },
     {
       id: 2,
-      company: 'Startup Solutions',
-      position: 'Full Stack Developer',
-      period: 'Jun 2021 - Dec 2022',
-      location: 'New York, NY',
-      description: 'Developed and maintained multiple client-facing web applications. Implemented RESTful APIs, integrated third-party services, and optimized database queries for improved performance.',
+      company: 'American Airlines - Pilot Technology',
+      position: 'Senior Full Stack Developer',
+      period: 'Jul 2019 - Oct 2022',
+      location: 'Chennai, TamilNadu',
+      description: 'Senior Full Stack Developer building and enhancing mission-critical applications used by pilots for operational workflows. Focused on developing scalable Spring Boot microservices, Angular-based user interfaces, and performance-optimized data access layers while ensuring production readiness across QA and business testing environments.',
       current: false,
       achievements: [
-        'Built 15+ production applications from scratch',
-        'Improved application performance by 45%',
-        'Introduced testing practices increasing code coverage to 85%'
+        'Designed and implemented new features using Spring Boot and Angular, ensuring high-quality, on-time feature delivery',
+        'Optimized database queries and implemented indexing, improving API response times by ~25%',
+        'Performed code reviews to maintain code quality and enforce best practices',
+        'Mentored junior developers, providing technical guidance and taking ownership of sprint deliverables',
+        'Diagnosed and resolved cloud environment issues during QA and BU testing, documenting solutions for future reference'
       ]
     },
     {
       id: 3,
-      company: 'Digital Agency',
-      position: 'Frontend Developer',
-      period: 'Jan 2020 - May 2021',
-      location: 'Austin, TX',
-      description: 'Built responsive and interactive user interfaces using Angular and React. Collaborated with designers to implement pixel-perfect designs. Improved application performance and user experience.',
+      company: 'Kohls - Retail',
+      position: 'Java Developer',
+      period: 'Nov 2017 - Jun 2019',
+      location: 'Chennai, TamilNadu',
+      description: 'Java Developer contributing to high-traffic e-commerce applications. Worked on backend services and web interfaces to support core retail workflows, collaborating with cross-functional teams to deliver reliable, scalable features and improve system performance',
       current: false,
       achievements: [
-        'Developed responsive UI components used across 10+ projects',
-        'Implemented real-time features using WebSockets',
-        'Reduced bug count by 40% through comprehensive testing'
+        'Implemented REST APIs using Spring Boot for backend services',
+        'Integrated Hazelcast in-memory caching, reducing API latency by ~40% and decreasing load on downstream services',
+        'Debugged and resolved production issues by identifying root causes and implementing fixes'
       ]
     }
   ];

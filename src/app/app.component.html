@@ -24,7 +24,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
             </svg>
           </div>
-          <div class="achievement-value">10+</div>
+          <div class="achievement-value">15+</div>
           <div class="achievement-label">Projects Delivered</div>
         </div>
 
@@ -35,8 +35,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
           </div>
-          <div class="achievement-value">5+</div>
-          <div class="achievement-label">Happy Clients</div>
+          <div class="achievement-value">15K+</div>
+          <div class="achievement-label">Users Supported</div>
         </div>
 
         <div class="achievement-card">
@@ -46,8 +46,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
             </svg>
           </div>
-          <div class="achievement-value">99%</div>
-          <div class="achievement-label">Success Rate</div>
+          <div class="achievement-value">99.9%</div>
+          <div class="achievement-label">System Reliability</div>
         </div>
       </div>
     </div>
@@ -332,12 +332,18 @@
               <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project..." class="form-textarea"></textarea>
             </div>
 
-            <button type="submit" class="form-submit">
-              <span>Send Message</span>
+            <button type="submit" class="form-submit" [disabled]="isSubmitting">
+              <span *ngIf="!isSubmitting">Send Message</span>
+              <span *ngIf="isSubmitting">Sending...</span>
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
               </svg>
             </button>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="submitMessage" class="submit-message" [class.success]="submitStatus === 'success'" [class.error]="submitStatus === 'error'">
+              {{ submitMessage }}
+            </div>
           </form>
         </div>
       </div>
