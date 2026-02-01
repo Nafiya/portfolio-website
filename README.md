@@ -6,13 +6,10 @@ A modern, responsive portfolio website built with Angular 17, featuring a clean 
 
 - ✨ Modern Angular 17 standalone components
 - 🎨 Beautiful, responsive design
-- 🌓 Dark/Light mode toggle
 - ⚡ Smooth animations and transitions
 - 📱 Mobile-first responsive layout
 - 🎯 SEO optimized
 - 🚀 Fast performance
-- 📊 Projects showcase with filtering
-- 💼 Skills visualization with progress bars
 - 📝 Experience timeline
 - 📧 Contact section
 - 🔒 Security headers configured
@@ -22,7 +19,7 @@ A modern, responsive portfolio website built with Angular 17, featuring a clean 
 - **Framework:** Angular 17
 - **Language:** TypeScript
 - **Styling:** CSS3 with CSS Variables
-- **Hosting:** Netlify (recommended)
+- **Hosting:** Netlify
 - **Build Tool:** Angular CLI
 
 ## 📋 Prerequisites
