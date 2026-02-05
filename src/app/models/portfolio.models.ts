@@ -1,3 +1,24 @@
+export interface ProjectDetailSection {
+  number: number;
+  title: string;
+  content: string;       // HTML-safe text description
+  highlights?: string[]; // Key points or bullet items
+  codeExample?: {
+    language: string;
+    label: string;
+    code: string;
+  };
+}
+
+export interface ProjectDetail {
+  subtitle: string;
+  sections: ProjectDetailSection[];
+  architecture?: {
+    flow: string[];       // Steps in the architecture flow
+    benefits: string[];   // Key benefits
+  };
+}
+
 export interface Project {
   id: number;
   title: string;
@@ -8,6 +29,7 @@ export interface Project {
   demo?: string;
   featured: boolean;
   category: string;
+  detail?: ProjectDetail;
 }
 
 export interface Skill {

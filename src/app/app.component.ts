@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { HeroComponent } from './components/hero/hero.component';
+import { ProjectDetailModalComponent } from './components/project-detail-modal/project-detail-modal.component';
 import { PortfolioDataService } from './services/portfolio-data.service';
 import { Project, Skill, Experience } from './models/portfolio.models';
 import emailjs from '@emailjs/browser';
@@ -10,7 +11,7 @@ import emailjs from '@emailjs/browser';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, HeroComponent],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, HeroComponent, ProjectDetailModalComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -25,6 +26,9 @@ export class AppComponent {
 
   selectedProjectCategory = 'All';
   projectCategories = ['All', 'Full Stack', 'Frontend', 'Backend'];
+
+  // Project detail modal state
+  selectedProject: Project | null = null;
 
   // Contact form state
   isSubmitting = false;
@@ -60,6 +64,16 @@ export class AppComponent {
 
   filterProjects(category: string): void {
     this.selectedProjectCategory = category;
+  }
+
+  openProjectDetail(project: Project): void {
+    this.selectedProject = project;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeProjectDetail(): void {
+    this.selectedProject = null;
+    document.body.style.overflow = '';
   }
 
   scrollToSection(sectionId: string): void {

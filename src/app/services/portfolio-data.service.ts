@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Project, Skill, Experience, Education, SocialLink } from '../models/portfolio.models';
+import { Project, ProjectDetail, Skill, Experience, Education, SocialLink } from '../models/portfolio.models';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,88 @@ export class PortfolioDataService {
   projects: Project[] = [
     {
       id: 1,
+      title: 'SQL Contention vs Cache Optimization',
+      description: 'How high concurrency affects database performance, why PostgreSQL can experience contention under load, and how a Redis cache resolves that bottleneck. This page breaks down the process step by step and highlights the impact of caching on system responsiveness and efficiency',
+      technologies: ['Spring Boot', 'Angular 17', 'Redis', 'PostgreSQL', 'TypeScript', 'Docker'],
+      image: 'assets/projects/nearby-service.png',
+      github: 'https://github.com/Nafiya/db-contention-vs-cache-demo-static',
+      demo: 'db-contention-vs-cache-demo.netlify.app',
+      featured: true,
+      category: 'Full Stack',
+      detail: {
+        subtitle: 'Eliminating Database Contention with Redis Atomic Caching',
+        sections: [
+          {
+            number: 1,
+            title: 'The Problem — Database Hot-Spot Contention',
+            content: 'Consider a daily transaction limit system: every API call must check and decrement a customer\'s remaining limit for the day. When 20+ threads hit the same row simultaneously, PostgreSQL serializes them with row-level locks. Each thread waits for the previous one to commit before acquiring the lock.',
+            highlights: [
+              'Lock Waits — Queries pile up in pg_stat_activity with wait_event_type = \'Lock\'',
+              'Throughput Collapse — TPS drops dramatically as threads spend most of their time waiting, not working',
+              'Latency Spikes — Average latency climbs from single-digit ms to 50–200ms under contention'
+            ],
+            codeExample: {
+              language: 'SQL',
+              label: 'Every concurrent request executes this',
+              code: 'UPDATE daily_limits\nSET    used_amount = used_amount + :amount\nWHERE  customer_id = :id\n  AND  year = :year AND month = :month\n  AND  used_amount + :amount <= max_limit;'
+            }
+          },
+          {
+            number: 2,
+            title: 'How to Identify It — Diagnosing Lock Contention',
+            content: 'During the "Direct DB" phase, the PostgreSQL terminal shows queries piling up with WAITING ON LOCKS status. When this number is high, most of your threads are blocked, waiting for a single row lock. This is the hot-spot contention pattern.',
+            highlights: [
+              '18 active connections, 14 WAITING ON LOCKS — avg latency: 45ms',
+              '20 active connections, 16 WAITING ON LOCKS — avg latency: 78ms',
+              'Compare with Cache phase: PostgreSQL terminal shows "Redis handling requests — no DB contention"'
+            ]
+          },
+          {
+            number: 3,
+            title: 'The Solution — Redis Atomic Lua Scripts',
+            content: 'Instead of hitting PostgreSQL for every request, we cache the limit state in Redis and use an atomic Lua script to check-and-decrement in a single operation — with zero locks. Redis processes all commands on a single thread, so no two operations ever run concurrently on the same data.',
+            highlights: [
+              'Single-Threaded Event Loop — Redis executes one command at a time',
+              'Atomic Lua Scripts (EVALSHA) — A Lua script runs as a single atomic unit',
+              'Check + Decrement in One Call — reads limit, checks amount, decrements atomically',
+              'No Locks, No Waits — no lock waits, no deadlocks, no contention — ever'
+            ],
+            codeExample: {
+              language: 'Lua',
+              label: 'limit_consume_script — runs atomically in Redis',
+              code: 'local current = tonumber(redis.call(\'GET\', KEYS[1]) or \'0\')\nlocal amount  = tonumber(ARGV[1])\nlocal maxLim  = tonumber(ARGV[2])\n\nif current + amount > maxLim then\n  return -1  -- limit exceeded\nend\n\nredis.call(\'INCRBY\', KEYS[1], amount)\nreturn current + amount  -- new used amount'
+            }
+          },
+          {
+            number: 4,
+            title: 'Write-Behind Cache Architecture',
+            content: 'This project uses a write-behind cache pattern: Redis handles all real-time limit checks, and changes are periodically synced back to PostgreSQL. Each EVALSHA call completes in microseconds. Even with 20 concurrent clients, Redis processes them sequentially at 10,000+ ops/sec.',
+            highlights: [
+              'Sub-millisecond Latency — Redis responds in microseconds, no disk I/O, no lock waits',
+              'Atomically Correct — Lua scripts guarantee no race conditions, limits are never over-consumed',
+              'DB Load Eliminated — PostgreSQL handles only periodic batch syncs, no per-request contention',
+              'Cache Warm-Up — On startup, limits are loaded from PostgreSQL into Redis for instant readiness'
+            ]
+          }
+        ],
+        architecture: {
+          flow: [
+            'API Request → Consume limit',
+            'Redis Cache → Atomic Lua script: Check + Decrement',
+            'Response → Approved / Denied (< 1ms)',
+            'Periodic Sync (background) → PostgreSQL batch UPDATE'
+          ],
+          benefits: [
+            'Sub-millisecond latency',
+            'Atomically correct — no race conditions',
+            'Database load eliminated',
+            'Cache warm-up on startup'
+          ]
+        }
+      }
+    },
+    {
+      id: 2,
       title: 'Nearby Finder Service',
       description: 'A geolocation-based service for finding nearby places using Redis GEO commands and geohashing. Built with Spring Boot backend and Angular frontend, featuring real-time location tracking and efficient spatial queries.',
       technologies: ['Spring Boot', 'Angular 17', 'Redis', 'PostgreSQL', 'TypeScript', 'Docker'],
@@ -36,52 +118,78 @@ export class PortfolioDataService {
       github: 'https://github.com/Nafiya/Nearby_Search_Service',
       demo: 'https://nearby-service-demo.netlify.app',
       featured: true,
-      category: 'Full Stack'
-    },
-    {
-      id: 2,
-      title: 'E-Commerce Platform',
-      description: 'Full-featured e-commerce platform with product management, shopping cart, payment integration, and order tracking. Implements microservices architecture with Spring Cloud.',
-      technologies: ['Spring Boot', 'React', 'MongoDB', 'Stripe API', 'Kubernetes'],
-      image: 'assets/projects/ecommerce.png',
-      github: 'https://github.com/yourusername/ecommerce',
-      demo: 'https://ecommerce-demo.netlify.app',
-      featured: true,
-      category: 'Full Stack'
+      category: 'Full Stack',
+      detail: {
+        subtitle: 'Geolocation-Based Search Using Redis GEO Commands and Geohashing',
+        sections: [
+          {
+            number: 1,
+            title: 'The Problem — Spatial Queries at Scale',
+            content: 'Finding nearby locations based on coordinates is computationally expensive with traditional SQL. Calculating distances using the Haversine formula across millions of rows leads to full table scans, making real-time proximity searches impractical for user-facing applications.',
+            highlights: [
+              'Full table scans for every proximity query — O(n) per request',
+              'Haversine formula is CPU-intensive when applied to millions of rows',
+              'Traditional B-tree indexes cannot efficiently index 2D spatial data'
+            ]
+          },
+          {
+            number: 2,
+            title: 'The Solution — Redis GEO with Geohashing',
+            content: 'Redis GEO commands use geohashing to convert latitude/longitude pairs into a single sorted-set score. This enables O(log(n)) proximity searches using GEORADIUS, which internally filters by geohash prefix — no expensive distance calculations needed for the initial filter.',
+            highlights: [
+              'GEOADD — stores locations with lng/lat as sorted-set scores using geohash encoding',
+              'GEORADIUS — finds all members within a given radius in O(log(n) + m) time',
+              'GEODIST — calculates exact distance between two members',
+              'Geohash prefix matching enables efficient range scans on sorted sets'
+            ],
+            codeExample: {
+              language: 'Redis',
+              label: 'Core GEO commands used in the service',
+              code: 'GEOADD locations -63.5752 44.6488 "Halifax_Library"\nGEOADD locations -63.5690 44.6476 "Halifax_Citadel"\n\nGEORADIUS locations -63.5720 44.6480 2 km\n  ASC COUNT 10 WITHDIST WITHCOORD'
+            }
+          },
+          {
+            number: 3,
+            title: 'Spring Boot Backend Architecture',
+            content: 'The backend exposes REST APIs that accept coordinates and search radius, delegates to a Redis-backed repository layer using Spring Data Redis, and returns ranked results with distances. PostgreSQL stores the canonical location data, while Redis serves as the spatial query engine.',
+            highlights: [
+              'REST API accepts lat/lng/radius and returns nearby locations with distances',
+              'Spring Data Redis integrates with Redis GEO commands natively',
+              'PostgreSQL stores canonical location metadata (name, address, category)',
+              'On startup, location coordinates are synced from PostgreSQL to Redis GEO sets'
+            ]
+          },
+          {
+            number: 4,
+            title: 'Angular Frontend — Real-Time Map Interface',
+            content: 'The Angular frontend provides an interactive map interface where users can click or use their current location to search for nearby places. Results are displayed both on the map and as a ranked list, with real-time updates as the user moves or adjusts the search radius.',
+            highlights: [
+              'Interactive map with click-to-search functionality',
+              'Browser Geolocation API for current-location-based search',
+              'Real-time results displayed on map markers and ranked list',
+              'Adjustable search radius with instant re-query'
+            ]
+          }
+        ],
+        architecture: {
+          flow: [
+            'User Action → Click on map or use current location',
+            'Angular Frontend → Sends lat/lng/radius to REST API',
+            'Spring Boot API → Executes GEORADIUS on Redis GEO set',
+            'Redis → Returns sorted results with distances in O(log(n))',
+            'Response → Nearby locations displayed on map and list'
+          ],
+          benefits: [
+            'O(log(n)) proximity search vs O(n) full table scan',
+            'Sub-millisecond spatial queries via Redis in-memory geohash',
+            'Real-time interactive map experience',
+            'Clean separation: Redis for spatial queries, PostgreSQL for metadata'
+          ]
+        }
+      }
     },
     {
       id: 3,
-      title: 'Task Management App',
-      description: 'Collaborative task management application with real-time updates, team collaboration features, and productivity analytics. Built with modern stack and WebSocket for live updates.',
-      technologies: ['Angular', 'Node.js', 'Socket.io', 'MySQL', 'Material Design'],
-      image: 'assets/projects/task-manager.png',
-      github: 'https://github.com/yourusername/task-manager',
-      demo: 'https://task-manager-demo.netlify.app',
-      featured: true,
-      category: 'Full Stack'
-    },
-    {
-      id: 4,
-      title: 'Weather Dashboard',
-      description: 'Beautiful weather dashboard with real-time data, forecasts, and interactive maps. Features location-based weather tracking and historical data visualization.',
-      technologies: ['React', 'OpenWeather API', 'Chart.js', 'Tailwind CSS'],
-      image: 'assets/projects/weather-dashboard.png',
-      github: 'https://github.com/yourusername/weather-dashboard',
-      featured: false,
-      category: 'Frontend'
-    },
-    {
-      id: 5,
-      title: 'Blog CMS',
-      description: 'Content Management System for blogs with markdown editor, media management, SEO optimization, and analytics dashboard. Supports multiple authors and categories.',
-      technologies: ['Spring Boot', 'Vue.js', 'PostgreSQL', 'Redis', 'AWS S3'],
-      image: 'assets/projects/blog-cms.png',
-      github: 'https://github.com/yourusername/blog-cms',
-      featured: false,
-      category: 'Full Stack'
-    },
-    {
-      id: 6,
       title: 'Portfolio Website',
       description: 'This responsive portfolio website showcasing projects, skills, and experience. Built with Angular 17 and deployed on Netlify.',
       technologies: ['Angular 17', 'TypeScript', 'CSS3', 'Netlify'],
@@ -89,8 +197,84 @@ export class PortfolioDataService {
       github: 'https://github.com/Nafiya/portfolio-website',
       demo: 'https://nafiya-sayed.com',
       featured: false,
-      category: 'Frontend'
-    }
+      category: 'Frontend',
+      detail: {
+        subtitle: 'A Responsive Portfolio Built with Angular 17 Standalone Components',
+        sections: [
+          {
+            number: 1,
+            title: 'Design Philosophy',
+            content: 'Built with a glassmorphic design system using CSS custom properties for consistent theming. The site supports dark and light modes with smooth transitions, and uses a mobile-first responsive layout throughout.',
+            highlights: [
+              'Glassmorphism with backdrop-filter blur and translucent backgrounds',
+              'CSS custom properties for theme-wide color consistency',
+              'Dark/light mode toggle with localStorage persistence',
+              'Smooth scroll navigation and staggered fade-in animations'
+            ]
+          },
+          {
+            number: 2,
+            title: 'Angular 17 Standalone Architecture',
+            content: 'Uses Angular 17 standalone components without NgModules, keeping the architecture flat and simple. Data is managed through a centralized service, and the entire site is a single-page application with section-based navigation.',
+            highlights: [
+              'Standalone components — no NgModules needed',
+              'Centralized PortfolioDataService for all content',
+              'EmailJS integration for the contact form',
+              'Deployed on Netlify with continuous deployment from GitHub'
+            ]
+          }
+        ]
+      }
+    },
+    // {
+    //   id: 4,
+    //   title: 'Blog CMS',
+    //   description: 'Content Management System for blogs with markdown editor, media management, SEO optimization, and analytics dashboard. Supports multiple authors and categories.',
+    //   technologies: ['Spring Boot', 'Vue.js', 'PostgreSQL', 'Redis', 'AWS S3'],
+    //   image: 'assets/projects/blog-cms.png',
+    //   github: 'https://github.com/yourusername/blog-cms',
+    //   featured: false,
+    //   category: 'Full Stack',
+    //   detail: {
+    //     subtitle: 'Full-Featured Blog Platform with Markdown Editing and Analytics',
+    //     sections: [
+    //       {
+    //         number: 1,
+    //         title: 'Content Management Features',
+    //         content: 'A full-featured CMS with a real-time markdown editor, media library with drag-and-drop uploads to AWS S3, and built-in SEO tools that generate meta tags, sitemaps, and Open Graph data automatically.',
+    //         highlights: [
+    //           'Real-time markdown editor with live preview',
+    //           'Media library with drag-and-drop upload to AWS S3',
+    //           'Auto-generated SEO meta tags, sitemaps, and Open Graph data',
+    //           'Multi-author support with role-based access control'
+    //         ]
+    //       },
+    //       {
+    //         number: 2,
+    //         title: 'Backend Architecture',
+    //         content: 'Spring Boot REST API with PostgreSQL for content storage and Redis for caching frequently accessed posts and session management. The caching layer reduces database load for popular posts and speeds up page renders.',
+    //         highlights: [
+    //           'Spring Boot REST API with JPA/Hibernate',
+    //           'PostgreSQL for structured content and user data',
+    //           'Redis caching for hot posts and session management',
+    //           'AWS S3 integration for scalable media storage'
+    //         ]
+    //       },
+    //       {
+    //         number: 3,
+    //         title: 'Analytics Dashboard',
+    //         content: 'Built-in analytics dashboard tracking page views, read time, bounce rate, and reader engagement per post. Data is aggregated in PostgreSQL and visualized in the Vue.js frontend with interactive charts.',
+    //         highlights: [
+    //           'Page views, read time, and bounce rate tracking',
+    //           'Per-post engagement analytics',
+    //           'Interactive charts built with Vue.js',
+    //           'Category and tag-based content organization'
+    //         ]
+    //       }
+    //     ]
+    //   }
+    // },
+    
   ];
 
   // Skills
