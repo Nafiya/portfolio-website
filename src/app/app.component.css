@@ -676,6 +676,8 @@
 
 .project-actions {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -716,6 +718,28 @@
 
 .btn-details:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-live-demo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-live-demo:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .btn-icon {

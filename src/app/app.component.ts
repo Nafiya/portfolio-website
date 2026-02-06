@@ -62,6 +62,10 @@ export class AppComponent {
     return this.skills.filter(s => s.category === 'tools');
   }
 
+  get genAiSkills(): Skill[] {
+    return this.skills.filter(s => s.category === 'genai');
+  }
+
   filterProjects(category: string): void {
     this.selectedProjectCategory = category;
   }

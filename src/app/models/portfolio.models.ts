@@ -35,7 +35,7 @@ export interface Project {
 export interface Skill {
   name: string;
   level: number; // 0-100
-  category: 'frontend' | 'backend' | 'tools' | 'other';
+  category: 'frontend' | 'backend' | 'tools' | 'genai' |'other';
 }
 
 export interface Experience {

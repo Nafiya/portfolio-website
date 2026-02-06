@@ -34,7 +34,7 @@ export class PortfolioDataService {
       technologies: ['Spring Boot', 'Angular 17', 'Redis', 'PostgreSQL', 'TypeScript', 'Docker'],
       image: 'assets/projects/nearby-service.png',
       github: 'https://github.com/Nafiya/db-contention-vs-cache-demo-static',
-      demo: 'db-contention-vs-cache-demo.netlify.app',
+      demo: 'https://db-contention-vs-cache-demo.netlify.app/live-demo',
       featured: true,
       category: 'Full Stack',
       detail: {
@@ -226,54 +226,85 @@ export class PortfolioDataService {
         ]
       }
     },
-    // {
-    //   id: 4,
-    //   title: 'Blog CMS',
-    //   description: 'Content Management System for blogs with markdown editor, media management, SEO optimization, and analytics dashboard. Supports multiple authors and categories.',
-    //   technologies: ['Spring Boot', 'Vue.js', 'PostgreSQL', 'Redis', 'AWS S3'],
-    //   image: 'assets/projects/blog-cms.png',
-    //   github: 'https://github.com/yourusername/blog-cms',
-    //   featured: false,
-    //   category: 'Full Stack',
-    //   detail: {
-    //     subtitle: 'Full-Featured Blog Platform with Markdown Editing and Analytics',
-    //     sections: [
-    //       {
-    //         number: 1,
-    //         title: 'Content Management Features',
-    //         content: 'A full-featured CMS with a real-time markdown editor, media library with drag-and-drop uploads to AWS S3, and built-in SEO tools that generate meta tags, sitemaps, and Open Graph data automatically.',
-    //         highlights: [
-    //           'Real-time markdown editor with live preview',
-    //           'Media library with drag-and-drop upload to AWS S3',
-    //           'Auto-generated SEO meta tags, sitemaps, and Open Graph data',
-    //           'Multi-author support with role-based access control'
-    //         ]
-    //       },
-    //       {
-    //         number: 2,
-    //         title: 'Backend Architecture',
-    //         content: 'Spring Boot REST API with PostgreSQL for content storage and Redis for caching frequently accessed posts and session management. The caching layer reduces database load for popular posts and speeds up page renders.',
-    //         highlights: [
-    //           'Spring Boot REST API with JPA/Hibernate',
-    //           'PostgreSQL for structured content and user data',
-    //           'Redis caching for hot posts and session management',
-    //           'AWS S3 integration for scalable media storage'
-    //         ]
-    //       },
-    //       {
-    //         number: 3,
-    //         title: 'Analytics Dashboard',
-    //         content: 'Built-in analytics dashboard tracking page views, read time, bounce rate, and reader engagement per post. Data is aggregated in PostgreSQL and visualized in the Vue.js frontend with interactive charts.',
-    //         highlights: [
-    //           'Page views, read time, and bounce rate tracking',
-    //           'Per-post engagement analytics',
-    //           'Interactive charts built with Vue.js',
-    //           'Category and tag-based content organization'
-    //         ]
-    //       }
-    //     ]
-    //   }
-    // },
+    {
+      id: 4,
+      title: 'JobScout',
+      description: 'A Python-based job automation agent that scrapes LinkedIn job listings, scores them against your skills using weighted matching (0–100%), deduplicates with SQLite, and sends email notifications for high-match roles. Runs locally or free on GitHub Actions.',
+      technologies: ['Python', 'GitHub Actions', 'SQLite', 'Gmail SMTP', 'LinkedIn'],
+      image: 'assets/projects/nearby-service.png',
+      github: 'https://github.com/Nafiya/JobScout',
+      featured: true,
+      category: 'Backend',
+      detail: {
+        subtitle: 'Automated LinkedIn Job Discovery with Skills-Weighted Scoring',
+        sections: [
+          {
+            number: 1,
+            title: 'The Problem — Job Searching Is Repetitive',
+            content: 'Manually browsing job boards is time-consuming and easy to miss relevant postings. JobScout automates the entire discovery pipeline: scraping LinkedIn, scoring each listing against your actual skill set, and notifying you only when a strong match is found.',
+            highlights: [
+              'Automates job discovery on LinkedIn using configurable search queries',
+              'Scores jobs 0–100% against your skills, keywords, location, and job type',
+              'Sends HTML email alerts only for jobs above your match threshold',
+              'Runs 24/7 for free via GitHub Actions cron schedule'
+            ]
+          },
+          {
+            number: 2,
+            title: 'How It Works — Scrape, Score, Notify',
+            content: 'JobScout follows a simple pipeline: fetch jobs from LinkedIn using combined keyword + skill + company queries via JobSpy, score each listing using a weighted matching engine, deduplicate against previously notified jobs stored in SQLite, and send an HTML email with the job title, company, score, and direct LinkedIn link.',
+            highlights: [
+              'Scrape — Fetches jobs from LinkedIn using JobSpy library',
+              'Score — Weighted matching: skills (80%), keywords (10%), location (5%), job meta (5%)',
+              'Deduplicate — SQLite tracks notified jobs so you never see the same listing twice',
+              'Notify — HTML email with job details, match score, and LinkedIn link'
+            ],
+            codeExample: {
+              language: 'YAML',
+              label: 'config.yaml — Search criteria and scoring',
+              code: 'criteria:\n  keywords:\n    - "Java developer"\n    - "backend engineer"\n  skills:\n    - "Java"\n    - "Spring Boot"\n    - "Docker"\n    - "AWS"\n  companies:\n    - "Google"\n    - "Microsoft"\n  location: "Toronto"\n  experience_level: "mid-senior"\n\nmatch_threshold: 70'
+            }
+          },
+          {
+            number: 3,
+            title: 'Skills-Weighted Scoring Engine',
+            content: 'Each job is scored 0–100% using a weighted formula. Skills carry 80% of the weight — matching roughly one-third of your listed skills gives full score. Keywords, location, and job metadata contribute the remaining 20%. Only jobs exceeding the configured threshold trigger notifications.',
+            highlights: [
+              'Skills (80%) — How many of your listed skills appear in the job description',
+              'Keywords (10%) — Job title/description matches against your keyword list',
+              'Location (5%) — Job location contains your target city',
+              'Job Meta (5%) — Experience level and job type match your preferences'
+            ]
+          },
+          {
+            number: 4,
+            title: 'Deployment — GitHub Actions for Free 24/7 Runs',
+            content: 'JobScout deploys as a GitHub Actions workflow with a cron schedule, running automatically without keeping your machine on. Credentials are stored as GitHub Secrets, and the workflow can be triggered manually or on a recurring schedule as fast as every 5 minutes.',
+            highlights: [
+              'GitHub Actions cron workflow for scheduled runs',
+              'Gmail SMTP with App Passwords for secure email delivery',
+              'Optional WhatsApp notifications via Meta Cloud API',
+              'Fork-friendly — update config.yaml and secrets to personalize'
+            ]
+          }
+        ],
+        architecture: {
+          flow: [
+            'Cron Trigger → GitHub Actions or local run',
+            'LinkedIn Scrape → JobSpy fetches listings by keywords + skills + companies',
+            'Scoring Engine → Weighted match: skills 80%, keywords 10%, location 5%, meta 5%',
+            'SQLite Dedup → Skip previously notified jobs',
+            'Email Notification → HTML email with job details and LinkedIn link'
+          ],
+          benefits: [
+            'Fully automated — runs 24/7 on GitHub Actions for free',
+            'Skills-weighted scoring eliminates irrelevant listings',
+            'SQLite deduplication ensures no repeat notifications',
+            'Configurable via YAML — no code changes needed to personalize'
+          ]
+        }
+      }
+    },
     
   ];
 
@@ -291,16 +322,21 @@ export class PortfolioDataService {
     { name: 'Java', level: 90, category: 'backend' },
     { name: 'Node.js', level: 80, category: 'backend' },
     { name: 'PostgreSQL', level: 85, category: 'backend' },
-    { name: 'MongoDB', level: 75, category: 'backend' },
-    { name: 'Redis', level: 80, category: 'backend' },
+    { name: 'Express', level: 75, category: 'backend' },
     
     // Tools & Others
     { name: 'Git', level: 90, category: 'tools' },
-    { name: 'Docker', level: 85, category: 'tools' },
-    { name: 'Azure', level: 70, category: 'tools' },
-    { name: 'REST API', level: 95, category: 'other' },
-    { name: 'Microservices', level: 80, category: 'other' },
-    { name: 'Agile/Scrum', level: 85, category: 'other' }
+    { name: 'REST API', level: 95, category: 'tools' },
+    { name: 'GraphQL', level: 95, category: 'tools' },
+    { name: 'Microservices', level: 80, category: 'tools' },
+    { name: 'Kafka', level: 85, category: 'tools' },
+    { name: 'ELK', level: 85, category: 'tools' },
+    { name: 'Agile/Scrum', level: 85, category: 'tools' },
+
+    //Gen AI tools usage
+    { name: 'GitHub copilot', level: 90, category: 'genai' },
+    { name: 'Claude AI', level: 80, category: 'genai' },
+    { name: 'Cursor', level: 70, category: 'genai' }
   ];
 
   // Experience
